@@ -4,49 +4,45 @@ import { User, Settings, ShoppingBag, ArrowLeft, LogIn, UserPlus, Inbox, Bell, M
 import { toast } from 'react-toastify';
 
 /**
- * AccountPage Component
+ * AccountPage Component for E-commerce
  * Provides user account functionalities including registration, login,
  * a simulated user dashboard, and an inbox for notifications.
- * Notifications and their handlers are now passed as props.
+ * It now receives notification data and handlers as props from App.jsx.
+ * It also handles the currentUserEmail state for login/logout.
  *
  * @param {object} props - Component props.
  * @param {Array<Object>} props.notifications - Array of notification objects.
  * @param {function} props.addNotification - Function to add a new notification.
  * @param {function} props.markNotificationAsRead - Function to mark a notification as read.
  * @param {function} props.clearNotifications - Function to clear all notifications.
+ * @param {string} props.currentUserEmail - The email of the currently logged-in user.
+ * @param {function} props.setCurrentUserEmail - Setter for the central currentUserEmail state in App.jsx.
  */
-const AccountPage = ({ notifications, addNotification, markNotificationAsRead, clearNotifications }) => {
-  // State to manage user login status and current user's email
+const AccountPage = ({ notifications, addNotification, markNotificationAsRead, clearNotifications, currentUserEmail, setCurrentUserEmail }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUserEmail, setCurrentUserEmail] = useState('');
+  const [localCurrentUserEmail, setLocalCurrentUserEmail] = useState('');
 
-  // State for registration form fields
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  // State for login form fields
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-
-  // State to control which form (login/register) is currently shown
   const [showRegisterForm, setShowRegisterForm] = useState(false);
 
-  // --- useEffect to load user data from localStorage on component mount ---
-  // Notifications are now loaded/saved in App.jsx
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUserEmail');
-    if (storedUser) {
+    // Sync local state with prop (which is synced with localStorage in App.jsx)
+    if (currentUserEmail) {
       setIsLoggedIn(true);
-      setCurrentUserEmail(storedUser);
+      setLocalCurrentUserEmail(currentUserEmail);
+    } else {
+      setIsLoggedIn(false);
+      setLocalCurrentUserEmail('');
     }
-  }, []);
+  }, [currentUserEmail]);
 
-  // --- Registration Handlers ---
   const handleRegister = (e) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
 
-    // Basic validation
     if (!regEmail || !regPassword || !confirmPassword) {
       toast.error("Please fill in all fields.");
       return;
@@ -60,26 +56,25 @@ const AccountPage = ({ notifications, addNotification, markNotificationAsRead, c
       return;
     }
 
-    // Simulate saving user to localStorage
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     if (users[regEmail]) {
       toast.error("An account with this email already exists.");
       return;
     }
 
-    users[regEmail] = regPassword; // Storing plain password for demo purposes ONLY
+    users[regEmail] = regPassword;
     localStorage.setItem('users', JSON.stringify(users));
 
     toast.success("Registration successful! Please log in.");
+    addNotification(`New account registered for ${regEmail}!`); // Add notification for registration
     setRegEmail('');
     setRegPassword('');
     setConfirmPassword('');
     setShowRegisterForm(false);
   };
 
-  // --- Login Handlers ---
   const handleLogin = (e) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
 
     if (!loginEmail || !loginPassword) {
       toast.error("Please enter both email and password.");
@@ -88,27 +83,22 @@ const AccountPage = ({ notifications, addNotification, markNotificationAsRead, c
 
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     if (users[loginEmail] === loginPassword) {
-      setIsLoggedIn(true);
-      setCurrentUserEmail(loginEmail);
-      localStorage.setItem('currentUserEmail', loginEmail);
+      setCurrentUserEmail(loginEmail); // Update central App state
+      localStorage.setItem('currentUserEmail', loginEmail); // Persist login
       toast.success(`Welcome back, ${loginEmail}!`);
-
-      // Add a welcome notification to the inbox via prop
-      addNotification(`Welcome back, ${loginEmail}! Check out our new arrivals.`);
+      addNotification(`Welcome back, ${loginEmail}!`); // Add notification for login
     } else {
       toast.error("Invalid email or password.");
     }
   };
 
-  // --- Logout Handler ---
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentUserEmail('');
-    localStorage.removeItem('currentUserEmail');
+    setCurrentUserEmail(''); // Clear central App state
+    localStorage.removeItem('currentUserEmail'); // Clear persisted login
     toast.info("You have been logged out.");
+    addNotification("You have been logged out successfully."); // Add notification for logout
   };
 
-  // --- Conditional Rendering based on login status ---
   return (
     <div className="container my-5">
       <div className="card shadow-lg border-0 rounded-3 p-4 p-md-5">
@@ -117,58 +107,32 @@ const AccountPage = ({ notifications, addNotification, markNotificationAsRead, c
         </h1>
 
         {!isLoggedIn ? (
-          // --- User is NOT logged in: Show Login/Register Forms ---
           <>
             <p className="lead text-center mb-5 text-muted">
               {showRegisterForm ? "Create your ShopVista account" : "Login to your ShopVista account"}
             </p>
 
             {showRegisterForm ? (
-              // Registration Form
               <form onSubmit={handleRegister} className="mx-auto" style={{ maxWidth: '400px' }}>
                 <div className="mb-3">
                   <label htmlFor="regEmail" className="form-label">Email address</label>
                   <div className="input-group">
                     <span className="input-group-text"><Mail size={18} /></span>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="regEmail"
-                      value={regEmail}
-                      onChange={(e) => setRegEmail(e.target.value)}
-                      placeholder="name@example.com"
-                      required
-                    />
+                    <input type="email" className="form-control" id="regEmail" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} placeholder="name@example.com" required />
                   </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="regPassword" className="form-label">Password</label>
                   <div className="input-group">
                     <span className="input-group-text"><LogIn size={18} /></span>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="regPassword"
-                      value={regPassword}
-                      onChange={(e) => setRegPassword(e.target.value)}
-                      placeholder="Min 6 characters"
-                      required
-                    />
+                    <input type="password" className="form-control" id="regPassword" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="Min 6 characters" required />
                   </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
                   <div className="input-group">
                     <span className="input-group-text"><LogIn size={18} /></span>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="confirmPassword"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Re-enter password"
-                      required
-                    />
+                    <input type="password" className="form-control" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Re-enter password" required />
                   </div>
                 </div>
                 <div className="d-grid gap-2 mb-3">
@@ -181,36 +145,19 @@ const AccountPage = ({ notifications, addNotification, markNotificationAsRead, c
                 </p>
               </form>
             ) : (
-              // Login Form
               <form onSubmit={handleLogin} className="mx-auto" style={{ maxWidth: '400px' }}>
                 <div className="mb-3">
                   <label htmlFor="loginEmail" className="form-label">Email address</label>
                   <div className="input-group">
                     <span className="input-group-text"><Mail size={18} /></span>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="loginEmail"
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="name@example.com"
-                      required
-                    />
+                    <input type="email" className="form-control" id="loginEmail" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} placeholder="name@example.com" required />
                   </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="loginPassword" className="form-label">Password</label>
                   <div className="input-group">
                     <span className="input-group-text"><LogIn size={18} /></span>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="loginPassword"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      placeholder="Your password"
-                      required
-                    />
+                    <input type="password" className="form-control" id="loginPassword" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} placeholder="Your password" required />
                   </div>
                 </div>
                 <div className="d-grid gap-2 mb-3">
@@ -225,10 +172,9 @@ const AccountPage = ({ notifications, addNotification, markNotificationAsRead, c
             )}
           </>
         ) : (
-          // --- User IS logged in: Show Dashboard and Inbox ---
           <>
             <p className="lead text-center mb-5 text-muted">
-              Welcome, <span className="fw-bold text-primary">{currentUserEmail}</span>!
+              Welcome, <span className="fw-bold text-primary">{localCurrentUserEmail}</span>!
             </p>
 
             <div className="row text-center mb-5">
@@ -266,7 +212,6 @@ const AccountPage = ({ notifications, addNotification, markNotificationAsRead, c
               </div>
             </div>
 
-            {/* Inbox Section */}
             <div id="inbox-section" className="mb-5 p-4 border rounded-3 bg-light">
               <h3 className="h4 fw-bold mb-4 d-flex align-items-center">
                 <Inbox size={24} className="me-2" /> Your Inbox
