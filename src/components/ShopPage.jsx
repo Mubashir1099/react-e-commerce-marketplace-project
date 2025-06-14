@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'; // Import useLocation
 import ProductCard from './ProductCard';
 import FilterSidebar from './FilterSidebar';
 import { getProducts } from '../services/productApi';
-import { toast } from 'react-toastify';
+
 
 /**
  * ShopPage Component
