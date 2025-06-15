@@ -15,6 +15,20 @@ If you are developing a production application, we recommend using TypeScript wi
 
 This is a React-based e-commerce marketplace project, simulating product Browse, filtering, and cart functionality using a mock REST API with JSON Server.
 
+**Student Information**
+
+Name: Muhammad Mubashir
+
+Roll Number: F23BDOCS1M01051
+
+Section: 3M
+
+**Project Overview**
+
+This project is a React-based Single-Page Application (SPA) designed to simulate the core functionalities of an online e-commerce store. It allows users to browse a product catalog, add items to a shopping cart, proceed through a simulated checkout process, manage user accounts, and interact with products by leaving reviews.
+The backend is simulated using json-server, which provides a quick and easy way to mock a REST API for data persistence in a local db.json file. User authentication is also simulated using localStorage.
+
+
 ## Table of Contents
 
 * [Features](#features)
@@ -25,15 +39,45 @@ This is a React-based e-commerce marketplace project, simulating product Browse,
 * [Functional Demo](#functional-demo)
 
 ## Features
-
 This application includes the following core features:
 
 * **Product Listing:** Displays a list of available products.
 * **Product Details:** View detailed information for each product on a dedicated page.
 * **Shopping Cart:** Users can add products to a cart, adjust quantities, and remove items.
+
 * **CRUD Operations (Mocked):**
-    * **Read:** Fetch and display products and cart items from `db.json` via JSON Server.
+
+   **Create (C):**
+1.User Registration: Creating new user accounts (localStorage).
+2.Add to Cart: Adding new items to the shopping cart (cartItems state).
+3.Place Order: Creating new order records (orders in db.json).
+4.Add Product: Adding new products to the main catalog (products in db.json via productApi.js).
+5.Add Review: Adding new reviews to a product (reviews array within products in db.json).
+
+**Read (R):**
+1.Browse Products: Displaying all products on ShopPage.
+2.View Product Details: Fetching and displaying a single product on ProductDetail.jsx.
+3.View Cart: Displaying items in the Cart.jsx.
+4.User Login: Reading user credentials from localStorage.
+5.View Profile: Reading user profile data from localStorage.
+6.View Order History: Fetching and displaying past orders from db.json.
+7.View Product Reviews: Displaying all reviews for a specific product.
+8.View Notifications: Displaying messages in the user's inbox.
+
+**Update (U):**
+1.Update Cart Quantity: Modifying the quantity of items in the cart.
+2.Update User Profile: Changing personal information (userProfiles in localStorage).
+3.Change Password: Updating user passwords (users in localStorage).
+4.Edit Product: Modifying existing product details (products in db.json via productApi.js).
+5.Edit Review: Updating an existing review (reviews array within products in db.json).
+6.Mark Notification as Read: Changing the status of a notification (notifications in localStorage).
+
+**Delete (D):**
+1.Remove from Cart: Deleting items from the shopping cart.
+2.Delete Product: Removing products from the main catalog (products in db.json via productApi.js).
+3.Clear Notifications: Removing all notifications from the inbox.
     * *(Note: Create, Update, Delete for products are implied for an admin panel but not fully implemented in the user-facing UI for this project. Cart operations (add, update quantity, remove) serve as CRUD on `cartItems` resource.)*
+
 * **Filtering:**
     * **Category Filter:** Filter products by their categories (e.g., Electronics, Apparel, Books).
     * **Price Range Filter:** Filter products by predefined price ranges (e.g., $0-50, $50-100, etc.).
@@ -61,311 +105,162 @@ This application includes the following core features:
 2.  **Minimum Quantity (Positive Input):**
     * **Product Detail & Cart Page:** Users cannot input a quantity less than 1. If they attempt to, the input automatically resets to 1, and a warning toast appears.
 3.  **Meaningful Filters:** Implemented `Category` and `Price Range` filters, allowing users to narrow down product listings based on common e-commerce criteria.
+4.    **Password Policy:** User registration/password change requires a minimum password length (e.g., 6 characters).
+5.    **Unique Email:** Registration prevents creating accounts with already registered email addresses.
+6.   **Owner-Only Editing/Deletion:** Product editing and deletion functionalities are restricted to the ownerEmail associated with the product.
 
+7.   **Login for Interaction:** Users must be logged in to add products, place orders, rate products, or submit reviews.
 ## Suggested Folder Structure
 e-commerce-marketplace/
-├── public/                 # Public assets (e.g., index.html)
-├── src/                    # Source code for the React application
-│   ├── components/         # Reusable UI components and specific pages
-│   │   ├── AccountPage.jsx       # User login/register, dashboard, inbox
-│   │   ├── AboutPage.jsx         # Static "About Us" information
-│   │   ├── Cart.jsx              # Shopping cart display and management
-│   │   ├── FilterSidebar.jsx     # Filters for products (category, price, search)
-│   │   ├── Footer.jsx            # Application footer
-│   │   ├── HomePage.jsx          # Main landing page with sign-up call to action
-│   │   ├── Navbar.jsx            # Top navigation bar with links and icons
-│   │   ├── OrderHistoryPage.jsx  # Displays user's past orders
-│   │   ├── ProductCard.jsx       # Individual product display card
-│   │   ├── ProductDetail.jsx     # Detailed view of a single product
-│   │   ├── ProfileSettingsPage.jsx # Update user profile info & password
-│   │   ├── SearchPage.jsx        # Dedicated product search page
-│   │   ├── ShopPage.jsx          # Main product listing page (previously ProductList)
-│   │   └── SignUpSection.jsx     # Reusable sign-up form for home page
-│   ├── services/           # Functions for interacting with the backend (JSON Server)
-│   │   └── productApi.js         # API calls for products
-│   ├── App.jsx             # Main application component, handles global state & routing
-│   ├── main.jsx            # Entry point for the React application
-│   └── index.css           # Global CSS styles
-├── db.json                 # Mock database file for JSON Server (product data, etc.)
+├── public/                 # Static assets
+├── src/
+│   ├── components/         # Reusable UI components and page-level components
+│   │   ├── AccountPage.jsx
+│   │   ├── AddProductPage.jsx
+│   │   ├── AboutPage.jsx
+│   │   ├── Cart.jsx
+│   │   ├── EditProductPage.jsx
+│   │   ├── FilterSidebar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── HomePage.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── OrderHistoryPage.jsx
+│   │   ├── ProductCard.jsx
+│   │   ├── ProductDetail.jsx
+│   │   ├── ProfileSettingsPage.jsx
+│   │   ├── SearchPage.jsx
+│   │   ├── ShopPage.jsx
+│   │   ├── SignUpSection.jsx
+│   │   └── ... (other components)
+│   ├── services/           # API integration logic
+│   │   └── productApi.js   # Functions for interacting with JSON Server
+│   ├── App.jsx             # Main application component, sets up routing and global state
+│   ├── index.css           # Global stylesheets
+│   └── main.jsx            # Entry point for the React app (Vite)
+├── db.json                 # JSON Server database file
 ├── package.json            # Project dependencies and scripts
-├── vite.config.js          # Vite build configuration
-└── README.md               # This file!
+├── vite.config.js          # Vite configuration
+└── README.md               # Project documentation
 
-Setup Instructions
-Follow these steps to get the project up and running on your local machine.
+## Setup Instructions
 
-Navigate to your desired project directory:
-Open your Command Prompt (or Git Bash/PowerShell) and change to the directory where you want to create the project. For example:
+To get this project up and running on your local machine, follow these steps:
 
-D:
-cd D:\react-projects
+**Clone the Repository:**
 
-**Create the React project**:
-Use Vite to create the basic React project structure.
-
-npm create vite@latest e-commerce-marketplace -- --template react
-
-**Navigate into your new project folder**:
-
+git clone [git clone https://github.com/Mubashir1099/react-e-commerce-marketplace-project.git]
 cd e-commerce-marketplace
 
-**Install project dependencies**:
-This installs React and other core dependencies.
-
+**Install Dependencies:**
+Navigate to the project root directory and install the necessary Node.js packages:
 npm install
 
-**Install additional libraries**:
-Install react-router-dom, bootstrap, json-server, react-toastify, and lucide-react.
+**Start JSON Server (Backend Simulation):**
+Open a new terminal window (keep the first one open for the React app) and run the JSON Server:
+.npx json-server --watch db.json --port 5000
 
-npm install react-router-dom bootstrap json-server react-toastify lucide-react
+Ensure db.json is in the root directory. This command makes your mock API available at http://localhost:5000.
 
-**Create db.json**:
-In the root of your e-commerce-marketplace folder, create a file named db.json and paste the following content into it:
-
-{
-  "products": [
-    {
-      "id": 1,
-      "name": "Stylish Men's Shirt",
-      "category": "Men's Apparel",
-      "price": 45.00,
-      "description": "A comfortable and stylish shirt for men, perfect for casual outings.",
-      "imageUrl": "https://images.unsplash.com/photo-1596756619553-90d56c4295e2?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 15
-    },
-    {
-      "id": 2,
-      "name": "Elegant Women's Dress",
-      "category": "Women's Apparel",
-      "price": 85.99,
-      "description": "An elegant dress designed for comfort and style, suitable for any occasion.",
-      "imageUrl": "https://images.unsplash.com/photo-1548967910-fe140882dd1a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 10
-    },
-    {
-      "id": 3,
-      "name": "Kid's Adventure Backpack",
-      "category": "Children's Gear",
-      "price": 30.00,
-      "description": "A durable and fun backpack for children, perfect for school or day trips.",
-      "imageUrl": "https://images.unsplash.com/photo-1592683935269-e77a28b0f985?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 20
-    },
-    {
-      "id": 4,
-      "name": "Wireless Gaming Headset",
-      "category": "Electronics",
-      "price": 120.50,
-      "description": "Immersive sound and comfort for long gaming sessions.",
-      "imageUrl": "https://images.unsplash.com/photo-1616788225574-8b6564619d08?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 8
-    },
-    {
-      "id": 5,
-      "name": "Men's Running Shoes",
-      "category": "Men's Apparel",
-      "price": 95.00,
-      "description": "Lightweight and supportive running shoes for optimal performance.",
-      "imageUrl": "https://images.unsplash.com/photo-1560769629-9f2d87e2213e?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 12
-    },
-    {
-      "id": 6,
-      "name": "Women's Yoga Pants",
-      "category": "Women's Apparel",
-      "price": 40.00,
-      "description": "Flexible and breathable yoga pants for comfortable workouts.",
-      "imageUrl": "https://images.unsplash.com/photo-1589139268682-16e537d94f24?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 18
-    },
-    {
-      "id": 7,
-      "name": "Children's Building Blocks",
-      "category": "Children's Toys",
-      "price": 25.00,
-      "description": "Colorful building blocks to foster creativity and fine motor skills in kids.",
-      "imageUrl": "https://images.unsplash.com/photo-1534063855577-9875b42d5010?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 30
-    },
-    {
-      "id": 8,
-      "name": "Smart Watch",
-      "category": "Electronics",
-      "price": 199.99,
-      "description": "Track your fitness, notifications, and more with this versatile smartwatch.",
-      "imageUrl": "https://images.unsplash.com/photo-1579586326078-43890f576b92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 10
-    },
-    {
-      "id": 9,
-      "name": "Children's Puzzle Set",
-      "category": "Children's Toys",
-      "price": 18.50,
-      "description": "An engaging puzzle set designed to challenge young minds and enhance problem-solving skills.",
-      "imageUrl": "https://images.unsplash.com/photo-1628045934149-a2e6b2b7b51b?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "stock": 25
-    }
-  ],
-  "cartItems": []
-}
-
-Create .gitignore:
-In the root of your e-commerce-marketplace folder, create a file named .gitignore and paste the following content into it:
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.pnpm-debug.log*
-
-# Diagnostic reports (https://nodejs.org/api/report.html)
-.report/
-
-# Node.js
-node_modules/
-dist/
-dist-ssr/
-*.local
-.env
-.env.*
-.npmrc
-.yarn/
-.vite/
-npm-cache/
-.eslintcache
-.prettierignore
-.vscode/
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-ehthumbs.db
-*.stackdump
-
-# Editor directories and files
-.idea/
-.vs/
-*.swp
-*.swo
-*.bak
-*.tmp
-*.iml
-.project
-.classpath
-.settings/
-.history
-
-**Replace content of existing files**:
-
-src/components/ShopPage.jsx (rename ProductList.jsx to ShopPage.jsx first)
-
-src/components/ProductDetail.jsx
-
-src/components/Navbar.jsx
-
-src/components/Cart.jsx
-
-src/App.jsx
-
-src/index.css
-
-src/components/HomePage.jsx (NEW FILE)
-
-src/components/SignUpSection.jsx (NEW FILE)
-
-src/components/AccountPage.jsx (Updated for login/register and inbox)
-
-src/components/AboutPage.jsx (NEW FILE)
-
-src/components/SearchPage.jsx (NEW FILE)
-
-src/components/ProfileSettingsPage.jsx (NEW FILE - now functional)
-
-src/components/OrderHistoryPage.jsx (NEW FILE - now dynamic)
-
-src/components/Footer.jsx (NEW FILE)
-
-(You will need to copy the latest code for each of these files from our conversation history and paste it into your respective files. The last provided versions for each component are the correct ones.)
-
-**Start JSON Server**:
-Open a new Command Prompt window, navigate to your e-commerce-marketplace project root, and run:
-
-json-server --watch db.json --port 5000
-
-Keep this terminal window open.
-
-**Start the React development server**:
-Open another new Command Prompt window, navigate to your e-commerce-marketplace project root, and run:
-
+**Start the React Development Server:**
+In your first terminal window, start the React application:
 npm run dev
 
-This will usually open your application in your default web browser at http://localhost:5173/.
+This will typically open the application in your browser at http://localhost:5173 (or another available port).
 
-How to Demo
-When demonstrating the project, cover the following key functionalities:
+## Functional Demo
 
-Application Launch: Show the HomePage with the welcome message and sign-up section.
+Here's a step-by-step functional demo to guide you through showcasing your E-Commerce Marketplace project. This is essentially how you can demonstrate its features to your teacher.
 
-**Navigation**:
+Before you start the demo, ensure both your JSON Server and React application are running:
 
-Click "Shop" in the Navbar to go to the product listing.
+**1.Open your terminal/command prompt.**
+**2.Navigate to your project directory:**
+Bash
+cd D:\react-projects\e-commerce-marketplace
 
-Use the "Shop" dropdown to filter products by "Men's", "Women's", "Children's", and "Electronics" categories.
+**3.Start JSON Server (in a new terminal window, or a new tab in your current terminal):**
+Bash
+npx json-server --watch db.json --port 5000
+(Keep this terminal window open.)
 
-Navigate to "About Us" and "Search" pages.
+**4.Start the React Development Server (in your original terminal window):**
+Bash
+npm run dev
+(This will open the app in your browser, usually at http://localhost:5173).
 
-Shopping Experience:
+**Functional Demo Steps:**
 
-Add various products to the cart from the "Shop" page.
+**1. Home Page & Initial Browsing**
 
-Go to the "Cart" page:
+.Action: Open your browser and navigate to http://localhost:5173.
+.Demonstrate:
+               .The HomePage with the welcome message and "Start Shopping" button.
+               .The SignUpSection (now "Join Our Community!").
+.Explain: This is the landing page designed to welcome users and invite them to explore.
 
-Change product quantities.
+**2. Product Catalog & Filtering (Shop Page)**
 
-Remove products.
+.Action: Click "Start Shopping" on the home page or "Shop" in the Navbar.
+.Demonstrate:
+              .All products displayed in a grid using ProductCard components.
+              .Filtering: Use the "Category" dropdown in the FilterSidebar (e.g., select "Electronics"). Show how the product list updates.
+              .Price Range Filtering: Select a price range (e.g., "$50 - $100"). Show how the list refines further.
+              .Search: Type a keyword in the "Search" bar (e.g., "shirt"). Show results.
+              .Average Ratings: Point out the average star rating displayed on each ProductCard.
+.Explain: This page allows users to efficiently find products using various filters and search.
 
-Demonstrate stock and minimum quantity constraints.
+**3. Product Details & Review System**
 
-Proceed to Checkout: Show the detailed toast notification that appears.
+.Action: Click on any ProductCard's "View Details" button.
+.Demonstrate:
+            .The ProductDetail page showing comprehensive information (larger image, full description, price, stock).
+            .Quantity Selector: Change the quantity. Show how it's limited by stock. Try to enter a quantity higher than stock to trigger the toast error.
+            ."Add to Cart" button: Click it. Observe the toast notification ("Product added to cart!") and the cart item count updating in the Navbar.
+            .Review System: Scroll down to the "Rate & Review This Product" section.
+.Action: Log in first (go to Account, register/login, then come back).
+.Demonstrate: Select a star rating. Click "Add/Edit Review", type a comment, and click "Submit Review". Show the toast notification.
+.Demonstrate: Show how your new review appears in the "All Reviews" list. If you submit another review for the same product, show that it updates your existing review.
+.Demonstrate: Point out how the "Average Rating" for the product updates based on your review.
+.Explain: This page provides in-depth product information and allows for crucial user interaction through ratings and reviews.
 
-User Account Features:
+**4. Shopping Cart Management**
 
-Go to the "Account" page.
+.Action: Click the "Shopping Cart" icon in the Navbar.
+.Demonstrate:
+            .List of items currently in the cart with their images, names, prices, and quantities.
+            .Update Quantity: Change the quantity of an item directly in the cart. Show the total updating. Try to set quantity to 0 or negative to show the constraint.
+            .Remove Item: Click the "Remove" button next to an item. Show it disappearing from the cart and the toast notification.
+            .Total Price: Highlight the dynamically calculated total price.
+.Explain: This is where users manage their selected items before purchase.
 
-Register a new user with an email and password.
+**5. Simulated Checkout**
 
-Log in with the newly created account.
+.Action: Ensure you are logged in (via the Account Page) and have items in your cart. Then, on the Cart page, click "Proceed to Checkout."
+.Demonstrate:
+           .The cart clears.
+           .A success toast notification appears: "Checkout successful! Your order #... placed successfully!"
+.Explain: This simulates the final purchase process.
 
-Show the "Welcome" notification in the inbox.
+**6. User Account & Order History**
 
-Navigate to "Profile Settings":
+.Action: Click the "User" icon in the Navbar, or navigate to /account.
+.Demonstrate:
+             .Login/Registration: If not logged in, quickly show the registration/login forms. Log in with an existing user (e.g., test@example.com if you registered one, or create a new one).
+             .Dashboard: Once logged in, show the "Welcome" message with the user's email.
+             ."Order History": Click the "View Orders" button under "Order History".
+.Demonstrate: Show how the order you just placed appears in the list. Point out the Order ID, date, total, and status. Click "View Details" to show the toast with item specifics.
+             ."Profile Settings": Click "Manage Profile". Explain this is where users can update details (no live demo needed unless you built out that form).
+             ."Inbox": Click "View Inbox". Show notifications for adding to cart, removing items, placing orders, and account actions (login/logout/signup). Demonstrate marking as read and clearing.
+             .Logout: Click the "Logout" button. Show the toast message and how the account page reverts to login/registration.
+.Explain: This section provides a personalized experience for the user, allowing them to manage their profile, track orders, and receive notifications.
 
-Update personal information (name, address, phone).
+**7. Product Management (Admin-like CRUD)**
 
-Demonstrate saving changes.
-
-Change the password and verify the new password by logging out and logging back in.
-
-Navigate to "Order History":
-
-Show the dynamically updated list of orders placed (from the checkout process).
-
-Demonstrate logging out.
-
-Search Functionality: Use the "Search" page to find specific products.
-
-Responsiveness: Briefly show how the layout adapts on a smaller screen (e.g., by resizing the browser window).
-
-**Additional Notes**
-Data Persistence: User accounts, profiles, cart data, and order history are stored in the browser's localStorage. This is for demonstration purposes; a real-world application would use a secure backend database.
-
-Authentication: The authentication system is simplified for demonstration; actual passwords are not hashed.
-
-Scalability: For larger applications, consider a more robust state management solution (e.g., Redux, Zustand) and a proper backend API (e.g., Node.js, Python/Django).
-
-Error Handling: Basic error handling for API fetches is in place.
+.Action: Log in with any user account. Go to /add-product (you might need to type this in the URL if there isn't a direct link in the Navbar yet).
+.Demonstrate:
+            .Add Product: Fill out the form completely (Name, Category, Price, Description, Image URL, Stock). Click "Submit Product".
+.Demonstrate: Go back to the /shop page. Show how your newly added product now appears in the main catalog.
+           .Edit Product: Go to the detail page of the product you just added. You will see an "Edit Product" button. Click it, change a detail (e.g., price or stock), and save. Show how the detail page reflects the change.
+           .Delete Product: On the detail page of your owned product, click the "Delete Product" button. Confirm the action.
+.Demonstrate: Go back to the /shop page and confirm the product is now gone.
+.Explain: This demonstrates the ability to manage the product catalog dynamically, showcasing full CRUD capabilities. You can mention that in a real application, this would typically be restricted to an admin user.
